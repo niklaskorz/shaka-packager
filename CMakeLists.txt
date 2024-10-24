@@ -9,6 +9,8 @@
 # Minimum CMake version.  This must be in the root level CMakeLists.txt.
 cmake_minimum_required(VERSION 3.24)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # These policy settings should be included before the project definition.
 include("packager/policies.cmake")
 
@@ -27,6 +29,28 @@ option(FULLY_STATIC "Attempt fully static linking of all CLI apps" OFF)
 enable_testing()
 
 option(SKIP_INTEGRATION_TESTS "Skip the packager integration tests" OFF)
+
+find_package(absl REQUIRED)
+find_package(MbedTLS REQUIRED)
+find_package(GTest REQUIRED)
+find_package(CURL REQUIRED)
+find_package(LibXml2 REQUIRED)
+find_package(PNG REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
+find_package(webm REQUIRED)
+
+# Alias to same names as vendored dependencies
+add_library(mbedtls ALIAS MbedTLS::mbedtls)
+add_library(gmock ALIAS GTest::gmock)
+add_library(gtest ALIAS GTest::gtest)
+add_library(gtest_main ALIAS GTest::gtest_main)
+add_library(libcurl ALIAS CURL::libcurl)
+add_library(LibXml2 ALIAS LibXml2::LibXml2)
+add_library(png_static ALIAS PNG::PNG) # not static but the expected library name
+add_library(libprotobuf ALIAS protobuf::libprotobuf)
+add_executable(protoc ALIAS protobuf::protoc)
+add_library(webm ALIAS webm::webm)
 
 # Subdirectories with their own CMakeLists.txt
 add_subdirectory(packager)
